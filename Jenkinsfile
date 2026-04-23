@@ -2,19 +2,11 @@ pipeline {
     agent any
     
     stages {
-        stage('Clone') {
-            steps {
-                git branch: 'dev',
-                    credentialsId: 'github-creds',
-                    url: 'https://github.com/govindcloud01/Devops_Projects.git'
-            }
-        }
-        
         stage('Build') {
             steps {
                 sh '''
                     chmod +x build.sh
-                    ./build.sh
+                    bash build.sh
                 '''
             }
         }
@@ -43,7 +35,7 @@ pipeline {
             steps {
                 sh '''
                     chmod +x deploy.sh
-                    ./deploy.sh
+                    bash deploy.sh
                 '''
             }
         }
