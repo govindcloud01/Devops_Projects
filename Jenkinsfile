@@ -4,13 +4,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh '''
-                    cp -r /home/ubuntu/.jenkins/workspace/react-devops-pipeline /tmp/docker-build
-                    cd /tmp/docker-build
-                    docker build -t react-devops-app .
-                    docker tag react-devops-app govindcloud01/dev:latest
-                    rm -rf /tmp/docker-build
-                '''
+                sh 'docker build -t react-devops-app -f $WORKSPACE/Dockerfile $WORKSPACE'
+                sh 'docker tag react-devops-app govindcloud01/dev:latest'
             }
         }
         
@@ -36,10 +31,7 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                sh '''
-                    chmod +x deploy.sh
-                    bash deploy.sh
-                '''
+                sh 'bash $WORKSPACE/deploy.sh'
             }
         }
     }
