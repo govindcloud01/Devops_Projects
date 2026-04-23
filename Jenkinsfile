@@ -1,15 +1,19 @@
 pipeline {
     agent any
     
-    environment {
-        PROJECT_DIR = '/home/govind-19364/Devops/react_deployment/devops-build'
-    }
-    
     stages {
+        stage('Clone') {
+            steps {
+                git branch: 'dev',
+                    credentialsId: 'github-creds',
+                    url: 'https://github.com/govindcloud01/Devops_Projects.git'
+            }
+        }
+        
         stage('Build') {
             steps {
                 sh '''
-                    cd $PROJECT_DIR
+                    chmod +x build.sh
                     ./build.sh
                 '''
             }
@@ -23,7 +27,6 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
-                        cd $PROJECT_DIR
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                         if [ "$GIT_BRANCH" = "origin/dev" ]; then
                             docker push govindcloud01/dev:latest
@@ -39,7 +42,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    cd $PROJECT_DIR
+                    chmod +x deploy.sh
                     ./deploy.sh
                 '''
             }
@@ -55,4 +58,3 @@ pipeline {
         }
     }
 }
-
