@@ -2,6 +2,19 @@ pipeline {
     agent any
     
     stages {
+        stage('Debug') {
+            steps {
+                sh '''
+                    echo "Current directory:"
+                    pwd
+                    echo "Files in workspace:"
+                    ls -la
+                    echo "Dockerfile contents:"
+                    cat Dockerfile
+                '''
+            }
+        }
+        
         stage('Build') {
             steps {
                 sh '''
