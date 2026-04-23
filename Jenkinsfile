@@ -2,24 +2,14 @@ pipeline {
     agent any
     
     stages {
-        stage('Debug') {
-            steps {
-                sh '''
-                    echo "Current directory:"
-                    pwd
-                    echo "Files in workspace:"
-                    ls -la
-                    echo "Dockerfile contents:"
-                    cat Dockerfile
-                '''
-            }
-        }
-        
         stage('Build') {
             steps {
                 sh '''
-                    chmod +x build.sh
-                    bash build.sh
+                    cp -r /home/ubuntu/.jenkins/workspace/react-devops-pipeline /tmp/docker-build
+                    cd /tmp/docker-build
+                    docker build -t react-devops-app .
+                    docker tag react-devops-app govindcloud01/dev:latest
+                    rm -rf /tmp/docker-build
                 '''
             }
         }
